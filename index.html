@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MentorMatch - Connect with Expert Mentors</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563EB',
+                        secondary: '#0D9488',
+                        accent: '#F97316',
+                        dark: '#1F2937',
+                        light: '#6B7280',
+                        bgLight: '#F9FAFB'
+                    },
+                    fontFamily: {
+                        poppins: ['Poppins', 'sans-serif'],
+                        inter: ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Poppins', sans-serif;
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .hero-bg {
+            background: linear-gradient(rgba(249, 250, 251, 0.9), rgba(249, 250, 251, 0.9)), url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');
+            background-size: cover;
+            background-position: center;
+        }
+        @keyframes slide-up {
+            0% { transform: translateY(20px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+        .animate-slide-up {
+            animation: slide-up 0.5s ease forwards;
+        }
+    </style>
+</head>
+<body class="bg-white text-dark">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <i class="bi bi-people-fill text-3xl text-primary"></i>
+                    <span class="ml-2 text-xl font-semibold font-poppins">MentorMatch</span>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#features" class="text-light hover:text-primary transition-colors">Features</a>
+                    <a href="#how-it-works" class="text-light hover:text-primary transition-colors">How It Works</a>
+                    <a href="#testimonials" class="text-light hover:text-primary transition-colors">Testimonials</a>
+                    <a href="#tech-stack" class="text-light hover:text-primary transition-colors">Tech Stack</a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button id="login-btn" class="text-primary font-medium hover:text-primary/80 transition-colors">Login</button>
+                    <button id="get-started-btn" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors font-medium">Get Started</button>
+                </div>
+                <div class="flex items-center md:hidden">
+                    <button id="mobile-menu-btn" class="text-light hover:text-primary">
+                        <i class="bi bi-list text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile menu -->
+        <div id="mobile-menu" class="md:hidden hidden bg-white shadow-lg absolute w-full">
+            <div class="px-4 py-3 space-y-3">
+                <a href="#features" class="block text-light hover:text-primary transition-colors">Features</a>
+                <a href="#how-it-works" class="block text-light hover:text-primary transition-colors">How It Works</a>
+                <a href="#testimonials" class="block text-light hover:text-primary transition-colors">Testimonials</a>
+                <a href="#tech-stack" class="block text-light hover:text-primary transition-colors">Tech Stack</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Auth Modal -->
+    <div id="auth-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+        <div class="bg-white rounded-lg w-full max-w-md p-6 shadow-xl animate-slide-up">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-semibold font-poppins" id="auth-title">Login</h2>
+                <button id="close-modal" class="text-light hover:text-dark">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+            <div class="auth-tabs flex border-b mb-6">
+                <button class="auth-tab px-6 py-2 font-medium auth-tab-active" data-tab="login">Login</button>
+                <button class="auth-tab px-6 py-2 font-medium" data-tab="signup">Sign Up</button>
+            </div>
+            <div id="login-content" class="tab-content active">
+                <form id="login-form" class="space-y-4">
+                    <div>
+                        <label for="email" class="block text-sm font-medium mb-1">Email</label>
+                        <input type="email" id="email" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" required>
+                    </div>
+                    <div>
+                        <label for="password" class="block text-sm font-medium mb-1">Password</label>
+                        <input type="password" id="password" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" required>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center">
+                            <input type="checkbox" id="remember" class="mr-2">
+                            <label for="remember" class="text-sm">Remember me</label>
+                        </div>
+                        <a href="#" class="text-sm text-primary hover:underline">Forgot password?</a>
+                    </div>
+                    <button type="submit" class="w-full bg-primary text-white py-2 rounded-lg hover:bg-primary/90 transition-colors font-medium">Login</button>
+                    <div class="relative flex items-center justify-center my-4">
+                        <div class="border-t w-full border-gray-300"></div>
+                        <div class="absolute bg-white px-3 text-sm text-light">OR</div>
+                    </div>
+                    <button type="button" class="w-full flex items-center justify-center border border-gray-300 py-2 rounded-lg hover:bg-bgLight transition-colors">
+                        <img src="https://cdn.cdnlogo.com/logos/g/35/google-icon.svg" alt="Google" class="w-5 h-5 mr-2">
+                        Continue with Google
+                    </button>
+                </form>
+            </div>
+            <div id="signup-content" class="tab-content">
+                <form id="signup-form" class="space-y-4">
+                    <div class="flex gap-4">
+                        <div class="w-1/2">
+                            <label for="first-name" class="block text-sm font-medium mb-1">First Name</label>
+                            <input type="text" id="first-name" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" required>
+                        </div>
+                        <div class="w-1/2">
+                            <label for="last-name" class="block text-sm font-medium mb-1">Last Name</label>
+                            <input type="text" id="last-name" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" required>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="signup-email" class="block text-sm font-medium mb-1">Email</label>
+                        <input type="email" id="signup-email" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" required>
+                    </div>
+                    <div>
+                        <label for="signup-password" class="block text-sm font-medium mb-1">Password</label>
+                        <input type="password" id="signup-password" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" required>
+                        <p class="text-xs text-light mt-1">Must be at least 8 characters long</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">I want to join as a</label>
+                        <div class="flex gap-4">
+                            <div class="w-1/2 border border-gray-300 rounded-lg p-4 cursor-pointer hover:border-primary user-role-option" data-role="student">
+                                <i class="bi bi-mortarboard text-2xl text-primary mb-2"></i>
+                                <h4 class="font-medium">Student</h4>
+                                <p class="text-xs text-light">Looking for guidance</p>
+                            </div>
+                            <div class="w-1/2 border border-gray-300 rounded-lg p-4 cursor-pointer hover:border-primary user-role-option" data-role="mentor">
+                                <i class="bi bi-person-check text-2xl text-secondary mb-2"></i>
+                                <h4 class="font-medium">Mentor</h4>
+                                <p class="text-xs text-light">Offering expertise</p>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="w-full bg-primary text-white py-2 rounded-lg hover:bg-primary/90 transition-colors font-medium">Sign Up</button>
+                    <div class="relative flex items-center justify-center my-4">
+                        <div class="border-t w-full border-gray-300"></div>
+                        <div class="absolute bg-white px-3 text-sm text-light">OR</div>
+                    </div>
+                    <button type="button" class="w-full flex items-center justify-center border border-gray-300 py-2 rounded-lg hover:bg-bgLight transition-colors">
+                        <img src="https://cdn.cdnlogo.com/logos/g/35/google-icon.svg" alt="Google" class="w-5 h-5 mr-2">
+                        Continue with Google
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero-bg py-16 lg:py-24">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h1 class="text-4xl lg:text-5xl font-semibold font-poppins leading-tight mb-4">Connect with Expert Mentors in Your Field</h1>
+                    <p class="text-lg text-light mb-8">Find the perfect mentor to guide your learning journey, or share your knowledge as a mentor. Schedule sessions, track progress, and grow together.</p>
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <button class="bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary/90 transition-colors font-medium shadow-md" id="join-student-btn">
+                            Join as Student
+                        </button>
+                        <button class="bg-white border border-primary text-primary px-6 py-3 rounded-lg hover:bg-primary/10 transition-colors font-medium" id="become-mentor-btn">
+                            Become a Mentor
+                        </button>
+                    </div>
+                </div>
+                <div class="flex justify-center">
+                    <img src="https://images.unsplash.com/photo-1543269865-cbf427effbad?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Mentor and student working together" class="rounded-xl shadow-xl max-w-full h-auto">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-semibold font-poppins mb-4">Key Features</h2>
+                <p class="text-light max-w-2xl mx-auto">Our platform is designed to make mentorship seamless, effective, and rewarding for both mentors and students.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="card-hover bg-white p-6 rounded-xl shadow-md">
+                    <div class="text-primary mb-4">
+                        <i class="bi bi-calendar-check text-4xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold font-poppins mb-2">Smart Scheduling</h3>
+                    <p class="text-light">Easily book sessions with your mentor or manage your availability with our intuitive calendar interface.</p>
+                </div>
+                <div class="card-hover bg-white p-6 rounded-xl shadow-md">
+                    <div class="text-secondary mb-4">
+                        <i class="bi bi-camera-video text-4xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold font-poppins mb-2">Integrated Video Calls</h3>
+                    <p class="text-light">Connect face-to-face with HD video calls directly in the platform. No additional software required.</p>
+                </div>
+                <div class="card-hover bg-white p-6 rounded-xl shadow-md">
+                    <div class="text-accent mb-4">
+                        <i class="bi bi-credit-card text-4xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold font-poppins mb-2">Secure Payments</h3>
+                    <p class="text-light">Process payments securely through Stripe or Razorpay with transparent fee structure.</p>
+                </div>
+                <div class="card-hover bg-white p-6 rounded-xl shadow-md">
+                    <div class="text-primary mb-4">
+                        <i class="bi bi-search text-4xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold font-poppins mb-2">Mentor Matching</h3>
+                    <p class="text-light">Our intelligent algorithm helps you find the perfect mentor based on your goals, interests, and availability.</p>
+                </div>
+                <div class="card-hover bg-white p-6 rounded-xl shadow-md">
+                    <div class="text-secondary mb-4">
+                        <i class="bi bi-chat-dots text-4xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold font-poppins mb-2">Messaging Platform</h3>
+                    <p class="text-light">Stay connected between sessions with our built-in messaging system. Share files and resources easily.</p>
+                </div>
+                <div class="card-hover bg-white p-6 rounded-xl shadow-md">
+                    <div class="text-accent mb-4">
+                        <i class="bi bi-graph-up text-4xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold font-poppins mb-2">Progress Tracking</h3>
+                    <p class="text-light">Set goals, track milestones, and measure your growth with visual progress indicators.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section id="how-it-works" class="py-16 bg-bgLight">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-semibold font-poppins mb-4">How It Works</h2>
+                <p class="text-light max-w-2xl mx-auto">Getting started with MentorMatch is simple, whether you're joining as a student or mentor.</p>
+            </div>
+            
+            <div class="flex justify-center mb-8">
+                <div class="inline-flex rounded-md shadow-sm" role="group">
+                    <button type="button" class="px-4 py-2 text-sm font-medium text-primary bg-white border border-primary rounded-l-lg hover:bg-primary hover:text-white focus:z-10 focus:bg-primary focus:text-white user-type-btn active" data-tab="student">
+                        For Students
+                    </button>
+                    <button type="button" class="px-4 py-2 text-sm font-medium text-primary bg-white border border-primary rounded-r-lg hover:bg-primary hover:text-white focus:z-10 focus:bg-primary focus:text-white user-type-btn" data-tab="mentor">
+                        For Mentors
+                    </button>
+                </div>
+            </div>
+            
+            <div id="student-flow" class="user-type-content active">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="bg-white p-6 rounded-xl shadow-md text-center">
+                        <div class="w-12 h-12 bg-primary text-white rounded-full flex items-center justify-center text-xl font-semibold mb-4 mx-auto">1</div>
+                        <h3 class="text-xl font-semibold font-poppins mb-2">Create Your Profile</h3>
+                        <p class="text-light">Sign up and create your profile highlighting your goals, interests, and what you're looking to learn.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-md text-center">
+                        <div class="w-12 h-12 bg-primary text-white rounded-full flex items-center justify-center text-xl font-semibold mb-4 mx-auto">2</div>
+                        <h3 class="text-xl font-semibold font-poppins mb-2">Find Your Mentor</h3>
+                        <p class="text-light">Browse through our extensive network of verified mentors and find the perfect match for your needs.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-md text-center">
+                        <div class="w-12 h-12 bg-primary text-white rounded-full flex items-center justify-center text-xl font-semibold mb-4 mx-auto">3</div>
+                        <h3 class="text-xl font-semibold font-poppins mb-2">Book & Connect</h3>
+                        <p class="text-light">Schedule your first session, make a secure payment, and start your mentorship journey.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="mentor-flow" class="user-type-content hidden">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="bg-white p-6 rounded-xl shadow-md text-center">
+                        <div class="w-12 h-12 bg-secondary text-white rounded-full flex items-center justify-center text-xl font-semibold mb-4 mx-auto">1</div>
+                        <h3 class="text-xl font-semibold font-poppins mb-2">Create Mentor Profile</h3>
+                        <p class="text-light">Sign up as a mentor, highlight your expertise, set your rates, and define your availability.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-md text-center">
+                        <div class="w-12 h-12 bg-secondary text-white rounded-full flex items-center justify-center text-xl font-semibold mb-4 mx-auto">2</div>
+                        <h3 class="text-xl font-semibold font-poppins mb-2">Get Verified</h3>
+                        <p class="text-light">Complete our verification process to showcase your credentials and build trust with potential students.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-md text-center">
+                        <div class="w-12 h-12 bg-secondary text-white rounded-full flex items-center justify-center text-xl font-semibold mb-4 mx-auto">3</div>
+                        <h3 class="text-xl font-semibold font-poppins mb-2">Start Mentoring</h3>
+                        <p class="text-light">Accept booking requests, conduct sessions, and receive secure payments directly to your account.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section id="testimonials" class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-semibold font-poppins mb-4">What Our Users Say</h2>
+                <p class="text-light max-w-2xl mx-auto">Hear from students and mentors who have experienced the power of our platform.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <div class="flex items-center mb-4">
+                        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Sarah J." class="w-12 h-12 rounded-full mr-4">
+                        <div>
+                            <h4 class="font-semibold">Sarah Johnson</h4>
+                            <p class="text-sm text-light">Software Engineering Student</p>
+                        </div>
+                    </div>
+                    <div class="text-yellow-400 mb-2">
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                    </div>
+                    <p class="text-light">"Finding a mentor in the tech industry completely changed my career trajectory. The scheduling and video call features made our sessions incredibly productive."</p>
+                </div>
+                
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <div class="flex items-center mb-4">
+                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Michael R." class="w-12 h-12 rounded-full mr-4">
+                        <div>
+                            <h4 class="font-semibold">Michael Rodriguez</h4>
+                            <p class="text-sm text-light">Senior Data Scientist & Mentor</p>
+                        </div>
+                    </div>
+                    <div class="text-yellow-400 mb-2">
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                    </div>
+                    <p class="text-light">"As a mentor, I appreciate how streamlined the platform makes payment processing and scheduling. It's allowed me to focus on what I do best - teaching and guiding."</p>
+                </div>
+                
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <div class="flex items-center mb-4">
+                        <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Priya M." class="w-12 h-12 rounded-full mr-4">
+                        <div>
+                            <h4 class="font-semibold">Priya Mehta</h4>
+                            <p class="text-sm text-light">UX Design Student</p>
+                        </div>
+                    </div>
+                    <div class="text-yellow-400 mb-2">
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-half"></i>
+                    </div>
+                    <p class="text-light">"The matching algorithm connected me with the perfect mentor for my design career. The progress tracking has been instrumental in keeping me accountable."</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tech Stack Section -->
+    <section id="tech-stack" class="py-16 bg-bgLight">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-semibold font-poppins mb-4">Modern Tech Stack Solutions</h2>
+                <p class="text-light max-w-2xl mx-auto">Our platform is built with the latest technologies to ensure reliability, security, and scalability.</p>
+            </div>
+            
+            <!-- Stack Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Frontend -->
+                <div class="card-hover bg-white p-6 rounded-xl shadow-md">
+                    <div class="flex items-center mb-4">
+                        <i class="bi bi-window text-2xl text-primary"></i>
+                        <h3 class="ml-2 text-xl font-semibold font-poppins">Frontend Deployment</h3>
+                    </div>
+                    <p class="text-light mb-4">Deploy your frontend applications with ease using Vercel or Netlify for optimal performance and reliability.</p>
+                    <div class="flex space-x-2">
+                        <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">Vercel</span>
+                        <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">Netlify</span>
+                    </div>
+                </div>
+
+                <!-- Backend -->
+                <div class="card-hover bg-white p-6 rounded-xl shadow-md">
+                    <div class="flex items-center mb-4">
+                        <i class="bi bi-server text-2xl text-secondary"></i>
+                        <h3 class="ml-2 text-xl font-semibold font-poppins">Backend Services</h3>
+                    </div>
+                    <p class="text-light mb-4">Node.js + Express.js with OAuth integration and payment processing for secure, scalable applications.</p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm">Node.js</span>
+                        <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm">Express</span>
+                        <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm">OAuth</span>
+                    </div>
+                </div>
+
+                <!-- Database -->
+                <div class="card-hover bg-white p-6 rounded-xl shadow-md">
+                    <div class="flex items-center mb-4">
+                        <i class="bi bi-database text-2xl text-purple-600"></i>
+                        <h3 class="ml-2 text-xl font-semibold font-poppins">Database Solutions</h3>
+                    </div>
+                    <p class="text-light mb-4">Choose between MongoDB or PostgreSQL with modern ORMs for efficient data management.</p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm">MongoDB</span>
+                        <span class="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm">PostgreSQL</span>
+                        <span class="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm">Prisma</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Features Section -->
+            <div class="mt-16">
+                <h3 class="text-2xl font-bold text-center mb-8 font-poppins">Integrated Features</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="bg-white p-6 rounded-xl shadow-md">
+                        <h3 class="text-xl font-semibold mb-4 font-poppins">Authentication & Integration</h3>
+                        <ul class="space-y-3">
+                            <li class="flex items-center">
+                                <i class="bi bi-check-circle-fill text-green-500 mr-2"></i>
+                                Google OAuth Integration
+                            </li>
+                            <li class="flex items-center">
+                                <i class="bi bi-check-circle-fill text-green-500 mr-2"></i>
+                                Gmail API Support
+                            </li>
+                            <li class="flex items-center">
+                                <i class="bi bi-check-circle-fill text-green-500 mr-2"></i>
+                                Calendar Integration
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-md">
+                        <h3 class="text-xl font-semibold mb-4 font-poppins">Payment Processing</h3>
+                        <ul class="space-y-3">
+                            <li class="flex items-center">
+                                <i class="bi bi-check-circle-fill text-green-500 mr-2"></i>
+                                Stripe Integration
+                            </li>
+                            <li class="flex items-center">
+                                <i class="bi bi-check-circle-fill text-green-500 mr-2"></i>
+                                Razorpay Support
+                            </li>
+                            <li class="flex items-center">
+                                <i class="bi bi-check-circle-fill text-green-500 mr-2"></i>
+                                Secure Payment Processing
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-16 bg-primary text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-3xl font-semibold font-poppins mb-4">Ready to Start Your Mentorship Journey?</h2>
+            <p class="text-xl opacity-90 mb-8 max-w-2xl mx-auto">Whether you're looking for guidance or ready to share your knowledge, join our community today.</p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <button class="bg-white text-primary px-6 py-3 rounded-lg hover:bg-opacity-90 transition-colors font-medium" id="student-cta-btn">
+                    Join as Student
+                </button>
+                <button class="bg-transparent border border-white text-white px-6 py-3 rounded-lg hover:bg-white hover:bg-opacity-20 transition-colors font-medium" id="mentor-cta-btn">
+                    Become a Mentor
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-white py-12 border-t">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center mb-4">
+                        <i class="bi bi-people-fill text-3xl text-primary"></i>
+                        <span class="ml-2 text-xl font-semibold font-poppins">MentorMatch</span>
+                    </div>
+                    <p class="text-light">Connecting mentors and students to inspire the next generation of talent.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-lg mb-4 font-poppins">Product</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#features" class="text-light hover:text-primary transition-colors">Features</a></li>
+                        <li><a href="#how-it-works" class="text-light hover:text-primary transition-colors">How it Works</a></li>
+                        <li><a href="#" class="text-light hover:text-primary transition-colors">Pricing</a></li>
+                        <li><a href="#" class="text-light hover:text-primary transition-colors">FAQ</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-lg mb-4 font-poppins">Company</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-light hover:text-primary transition-colors">About Us</a></li>
+                        <li><a href="#" class="text-light hover:text-primary transition-colors">Careers</a></li>
+                        <li><a href="#" class="text-light hover:text-primary transition-colors">Blog</a></li>
+                        <li><a href="#" class="text-light hover:text-primary transition-colors">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-lg mb-4 font-poppins">Legal</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-light hover:text-primary transition-colors">Terms of Service</a></li>
+                        <li><a href="#" class="text-light hover:text-primary transition-colors">Privacy Policy</a></li>
+                        <li><a href="#" class="text-light hover:text-primary transition-colors">Cookie Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="mt-8 pt-8 border-t">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <p class="text-light">&copy; 2024 MentorMatch. All rights reserved.</p>
+                    <div class="flex space-x-4 mt-4 md:mt-0">
+                        <a href="#" class="text-light hover:text-primary transition-colors">
+                            <i class="bi bi-twitter text-xl"></i>
+                        </a>
+                        <a href="#" class="text-light hover:text-primary transition-colors">
+                            <i class="bi bi-facebook text-xl"></i>
+                        </a>
+                        <a href="#" class="text-light hover:text-primary transition-colors">
+                            <i class="bi bi-instagram text-xl"></i>
+                        </a>
+                        <a href="#" class="text-light hover:text-primary transition-colors">
+                            <i class="bi bi-linkedin text-xl"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+        
+        // Authentication modal functionality
+        const loginBtn = document.getElementById('login-btn');
+        const getStartedBtn = document.getElementById('get-started-btn');
+        const joinStudentBtn = document.getElementById('join-student-btn');
+        const becomeMentorBtn = document.getElementById('become-mentor-btn');
+        const studentCtaBtn = document.getElementById('student-cta-btn');
+        const mentorCtaBtn = document.getElementById('mentor-cta-btn');
+        const authModal = document.getElementById('auth-modal');
+        const closeModal = document.getElementById('close-modal');
+        const authTabs = document.querySelectorAll('.auth-tab');
+        const authTitle = document.getElementById('auth-title');
+        
+        function openModal(tab = 'login') {
+            authModal.classList.remove('hidden');
+            activateTab(tab);
+        }
+        
+        function closeModalFunc() {
+            authModal.classList.add('hidden');
+        }
+        
+        function activateTab(tab) {
+            // Reset all tabs
+            document.querySelectorAll('.auth-tab').forEach(t => {
+                t.classList.remove('auth-tab-active');
+                t.style.borderBottom = 'none';
+            });
+            
+            document.querySelectorAll('.tab-content').forEach(c => {
+                c.classList.remove('active');
+            });
+            
+            // Activate selected tab
+            document.querySelector(`.auth-tab[data-tab="${tab}"]`).classList.add('auth-tab-active');
+            document.querySelector(`.auth-tab[data-tab="${tab}"]`).style.borderBottom = '2px solid #2563EB';
+            document.getElementById(`${tab}-content`).classList.add('active');
+            
+            // Update modal title
+            authTitle.textContent = tab === 'login' ? 'Login' : 'Sign Up';
+        }
+        
+        loginBtn.addEventListener('click', () => openModal('login'));
+        getStartedBtn.addEventListener('click', () => openModal('signup'));
+        joinStudentBtn.addEventListener('click', () => {
+            openModal('signup');
+            // Auto-select student role if present
+            const studentOption = document.querySelector('.user-role-option[data-role="student"]');
+            if (studentOption) {
+                document.querySelectorAll('.user-role-option').forEach(opt => {
+                    opt.classList.remove('border-primary');
+                    opt.classList.add('border-gray-300');
+                });
+                studentOption.classList.remove('border-gray-300');
+                studentOption.classList.add('border-primary');
+            }
+        });
+        
+        becomeMentorBtn.addEventListener('click', () => {
+            openModal('signup');
+            // Auto-select mentor role if present
+            const mentorOption = document.querySelector('.user-role-option[data-role="mentor"]');
+            if (mentorOption) {
+                document.querySelectorAll('.user-role-option').forEach(opt => {
+                    opt.classList.remove('border-primary');
+                    opt.classList.add('border-gray-300');
+                });
+                mentorOption.classList.remove('border-gray-300');
+                mentorOption.classList.add('border-primary');
+            }
+        });
+        
+        studentCtaBtn.addEventListener('click', () => joinStudentBtn.click());
+        mentorCtaBtn.addEventListener('click', () => becomeMentorBtn.click());
+        
+        closeModal.addEventListener('click', closeModalFunc);
+        
+        // Close modal when clicking outside
+        authModal.addEventListener('click', (e) => {
+            if (e.target === authModal) {
+                closeModalFunc();
+            }
+        });
+        
+        // Tab switching in auth modal
+        authTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                activateTab(tab.dataset.tab);
+            });
+        });
+        
+        // User role selection in signup
+        const userRoleOptions = document.querySelectorAll('.user-role-option');
+        userRoleOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                userRoleOptions.forEach(opt => {
+                    opt.classList.remove('border-primary');
+                    opt.classList.add('border-gray-300');
+                });
+                option.classList.remove('border-gray-300');
+                option.classList.add('border-primary');
+            });
+        });
+        
+        // How it works tabs
+        const userTypeBtns = document.querySelectorAll('.user-type-btn');
+        userTypeBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                userTypeBtns.forEach(b => {
+                    b.classList.remove('active', 'bg-primary', 'text-white');
+                    b.classList.add('bg-white', 'text-primary');
+                });
+                btn.classList.add('active', 'bg-primary', 'text-white');
+                btn.classList.remove('bg-white', 'text-primary');
+                
+                document.querySelectorAll('.user-type-content').forEach(content => {
+                    content.classList.add('hidden');
+                    content.classList.remove('active');
+                });
+                
+                const targetContent = document.getElementById(`${btn.dataset.tab}-flow`);
+                targetContent.classList.remove('hidden');
+                targetContent.classList.add('active');
+            });
+        });
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    // Close mobile menu if open
+                    if (!mobileMenu.classList.contains('hidden')) {
+                        mobileMenu.classList.add('hidden');
+                    }
+                    
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80, // Adjust for fixed header
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // Form submission
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Simulate loading
+            const submitBtn = this.querySelector('button[type="submit"]');
+            submitBtn.innerHTML = '<i class="bi bi-arrow-repeat animate-spin inline-block mr-2"></i> Logging in...';
+            submitBtn.disabled = true;
+            
+            // Simulate API call
+            setTimeout(() => {
+                alert('This is a demo. In a real application, this would log you in.');
+                submitBtn.innerHTML = 'Login';
+                submitBtn.disabled = false;
+            }, 1500);
+        });
+        
+        document.getElementById('signup-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Simulate loading
+            const submitBtn = this.querySelector('button[type="submit"]');
+            submitBtn.innerHTML = '<i class="bi bi-arrow-repeat animate-spin inline-block mr-2"></i> Creating account...';
+            submitBtn.disabled = true;
+            
+            // Simulate API call
+            setTimeout(() => {
+                alert('This is a demo. In a real application, this would create your account.');
+                submitBtn.innerHTML = 'Sign Up';
+                submitBtn.disabled = false;
+            }, 1500);
+        });
+    </script>
+<script>document.body.addEventListener('wheel', e => { if (!e.ctrlKey) return; e.preventDefault(); return }, { passive: false })</script>
+	</body>
+</html>
